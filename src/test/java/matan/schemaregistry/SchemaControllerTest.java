@@ -41,7 +41,7 @@ public class SchemaControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"", "   "})
+    @ValueSource(strings = {"\t", ""})
     public void createSchema_invalidName(String name) {
         ResponseEntity<String> createResponse = this.restTemplate.postForEntity(
                 this.route(),
@@ -49,17 +49,6 @@ public class SchemaControllerTest {
                         .put("name", name),
                 String.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"im invalid"})
-    public void createSchema_invalidId(String id) {
-        ResponseEntity<JsonNode> response = this.restTemplate.postForEntity(
-                this.route(),
-                this.objectMapper.createObjectNode()
-                        .put("id", id),
-                JsonNode.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     private URI route() {

@@ -5,17 +5,16 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "schema")
+@Table(name = "schemas")
 public class Schema {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true, nullable = false, updatable = false, columnDefinition = "uuid")
-    private UUID id;
+    @Column(unique = true, nullable = false, updatable = false)
+    private Long id;
     @NotBlank
     @Column(nullable = false)
     private String name;
