@@ -1,18 +1,21 @@
 version: '3'
 services:
   db:
-    image: mcr.microsoft.com/mssql/server
+    image: postgres:14.1-alpine
+    restart: always
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong!Passw0rd
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     ports:
-      - 1433:1433
-    command:
-      - /bin/bash
-      - -c
-      - |
-        /opt/mssql/bin/sqlservr &
-        pid=$$!
-        sleep 10s
-        /opt/mssql-tools/bin/sqlcmd -S db -U SA -P YourStrong!Passw0rd -Q "CREATE DATABASE SchemaRegistry"
-        wait $$pid
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+  schema-registry:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "db"
+volumes:
+  db:
+    driver: local
